@@ -14,7 +14,7 @@ __description__ = '''Detect haplotypes using BLAST queries.'''
 ARGS = [
     ('-input', dict(metavar='<str>', type=str, help='''fasta sequences awaiting analysis''', required=True)),
     ('-ref', dict(metavar='<str>', type=str, help='''reference fasta sequences for haplotype detection''', required=True)),
-    ('-db', dict(metavar='<str>', type=str, help='''location of the BLAST database (will be created if not existent)''', required=True)),
+    ('-db', dict(metavar='<str>', type=str, help='''location of the BLAST database (will be created if not existent)''', required=False)),
     ('-blast_result', dict(metavar='<str>', type=str, help='''location of pre-computed BLAST results (requires -outfmt 6)''', required=False)),
     ('-e', dict(metavar='<num>', type=float, help='''maximum E value in BLAST queries''', required=False, default=1e-5)),
     ('-word_size', dict(metavar='<int>', type=int, help='''word size in BLAST queries''', required=False, default=11)),
@@ -244,10 +244,8 @@ def main(pars, args):
     num_threads = args.t
 
     if not db_file and not blast_result:
-        print("Please specify either db_file or blast_result.")
-        print()
-        pars.print_help()
-        sys.exit(1)
+        db_file = ref_file + '.blast_db'
+        print(f'Making BLAST database at {db_file}')
 
     run(target_file, ref_file, db_file, blast_result, e_value, word_size, result_file, cut_value, num_threads)
 

@@ -12,7 +12,7 @@ __description__ = '''Detect haplotypes based on a reference database. Mixed hapl
 ARGS = [
     ('-input', dict(metavar='<str>', type=str, help='''fasta sequences awaiting analysis''', required=True)),
     ('-ref', dict(metavar='<str>', type=str, help='''reference fasta sequences for haplotype detection''', required=True)),
-    ('-db', dict(metavar='<str>', type=str, help='''location of the k-mer database (will be created if not existent)''', required=True)),
+    ('-db', dict(metavar='<str>', type=str, help='''location of the k-mer database (will be created if not existent)''', required=False)),
     ('-k', dict(metavar='<int>', type=int, help='''k-mer size''', required=False, default=21)),
     ('-cut', dict(metavar='<int>', type=int, help='''minimum percentage of identical nucleotides to assume a sequence is not recombinant''', required=False, default=85)),
     ('-output', dict(metavar='<str>', type=str, help='''name prefix of output files''', required=True))
@@ -217,6 +217,10 @@ def main(pars, args):
     target_file = args.input
     result_file = args.output
     cut_value = args.cut
+
+    if not dict_file:
+        dict_file = ref_file + f'.{k_value}.gz'
+        print(f'Generating k-mer database at {dict_file}')
 
     run(k_value, dict_file, ref_file, target_file, result_file, cut_value)
 
